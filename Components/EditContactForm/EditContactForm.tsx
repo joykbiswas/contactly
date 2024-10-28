@@ -1,12 +1,18 @@
 "use client"
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
-interface EditContactForm {
-    id: string; 
+interface EditContactFormProps {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    profilePicture: string;
 }
 
-const EditContactForm = ({id, name, email, phone, address, profilePicture}) => {
+const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone, address, profilePicture}) => {
     const [newName, setNewName] = useState(name)
     const [newEmail, setNewEmail] = useState(email)
     const [newPhone, setNewPhone] = useState(phone);
@@ -15,7 +21,7 @@ const EditContactForm = ({id, name, email, phone, address, profilePicture}) => {
    console.log(name, email);
     const router = useRouter();
 
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e: React.FormEvent) =>{
         e.preventDefault();
 
         try{
@@ -29,13 +35,22 @@ const EditContactForm = ({id, name, email, phone, address, profilePicture}) => {
             if(!res.ok) {
                 throw new Error ("Failed to update topic");
             }
+            Swal.fire({
+                icon: "success",
+                title: "Contact Data Successfully Update",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              
             router.push('/')
-        } catch(error){}
+        } catch(error){
+            console.log(error);
+        }
     }
 
     return (
         <div>
-            <div className="max-w-lg mx-auto p-4 bg-white rounded-lg shadow-md">
+            <div className="max-w-lg mx-auto p-4 mt-8 mb-12 bg-white rounded-lg shadow-md">
                 <form onSubmit={handleSubmit}>
                     
                     <div className="relative mx-auto w-full">

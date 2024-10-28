@@ -4,13 +4,20 @@ import React from 'react';
 import { MdOutlineEmail } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
 import { RiMapPinLine } from "react-icons/ri";
-import Link from 'next/link';
 import RemoveBtn from '../RemoveBtn/RemoveBtn';
-// import { EditModal } from '../EditModal';
+import { EditModal } from '../EditModal';
+
+interface Contact {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    profilePicture: string;
+}
 
 
-
-const getTopics = async () => {
+const getTopics = async (): Promise<{ topics: Contact[] }> => {
     try {
         const res = await fetch('http://localhost:3000/api/contacts/', {
             cache: "no-store",
@@ -21,6 +28,7 @@ const getTopics = async () => {
         return res.json();
     } catch (error) {
         console.log("Error loading topics", error);
+        return { topics: [] };
     }
 }
 
@@ -42,39 +50,35 @@ const ContactsList = async () => {
                                     src={t.profilePicture}
                                     unoptimized
                                     alt="profile img"
-                                    className="w-24 h-24 rounded-full border-4 border-pink-500 mt-16" //todo:  border-white
+                                    className="w-24 h-24 rounded-full border-4 border-white mt-16" //todo:  border-white
                                 />
                             </div>
                         </div>
 
                         {/* Contact Info */}
-                        <div className="pt-7  px-6 border-2 border-yellow-400">
-                            <h3 className="text-xl font-semibold text-center text-gray-800 mb-4 border">{t.name}</h3>
+                        <div className="pt-7  px-6">
+                            <h3 className="text-xl font-semibold text-center text-gray-800 mb-4">{t.name}</h3>
 
                             <div className="space-y-3">
-                                <div className="flex items-center text-gray-600">
+                                <div className="flex items-center gap-2 text-gray-700">
                                     <MdOutlineEmail />
-                                    <h2 className="w-4 h-4 mr-2" />
-                                    <span className="text-sm">{t.email}</span>
+                                    <span className="text-base">{t.email}</span>
                                 </div>
 
-                                <div className="flex items-center text-gray-600">
+                                <div className="flex items-center gap-2 text-gray-700">
                                     <FiPhone />
-                                    <h3 className="w-4 h-4 mr-2" />
-                                    <span className="text-sm">{t.phone}</span>
+                                    <span className="text-base">{t.phone}</span>
                                 </div>
 
-                                <div className="flex items-start text-gray-600">
-                                    <RiMapPinLine />
-                                    <h2 className="w-4 h-4 mr-2 mt-1 flex-shrink-0" />
-                                    <span className="text-sm">{t.address}</span>
+                                <div className="flex items-start gap-2  text-gray-700">
+                                    <RiMapPinLine className='text-xl'/>
+                                    <span className="text-base">{t.address}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex  justify-around gap-4 pb-4 ">
-                            <Link href={`/editContact/${t._id}`} className="p-6 rounded-full py-2 font-medium text-gray-400 shadow-[0px_0px_10px_#E2DADA] duration-500  hover:scale-95 hover:bg-[#0095FF] hover:text-white hover:shadow-xl dark:shadow-[0px_2px_8px_0px_rgba(0,0,0,0.8)]">Edit</Link>
-                            {/* <EditModal id={t._id}/> */}
+                            <EditModal id={t._id}/>
                             <RemoveBtn id={t._id}/>
                         </div>
                     </div>

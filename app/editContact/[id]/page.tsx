@@ -16,7 +16,12 @@ const getTopicsById = async(id: string) =>{
         console.log(error);
     }
 }
-const EditContact = async ({ params }) => {
+interface EditContactProps {
+    params: {
+        id: string;
+    };
+}
+const EditContact = async ({ params }: EditContactProps) => {
     const { id } =await params;
     const {topic}=  await getTopicsById(id)
     console.log("ediId topic",topic);
