@@ -35,7 +35,6 @@ const getTopics = async (): Promise<{ topics: Contact[] }> => {
 const ContactsList = async () => {
 
     const { topics } = await getTopics();
-    console.log(topics)
 
     return (
         <div className="container mx-auto px-4">

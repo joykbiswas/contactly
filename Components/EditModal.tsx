@@ -1,6 +1,5 @@
 "use client"
 import Link from 'next/link';
-// import EditContactForm from './EditContactForm/EditContactForm';
 
 interface EditModalProps {
     id: string;
@@ -8,8 +7,6 @@ interface EditModalProps {
 
 
 export const EditModal : React.FC<EditModalProps> = ({ id }) => {
-    console.log("edit id",id);
-    // const [openModal, setOpenModal] = useState(false);
     return (
       <>
         <button>
