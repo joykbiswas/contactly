@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <Banner />
-      <div className="max-w-7xl mx-auto ">
+      <div className="max-w-screen-xl mx-auto ">
         <ContactsList />
       </div>
 

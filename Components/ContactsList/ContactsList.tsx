@@ -38,11 +38,15 @@ const ContactsList = async () => {
     console.log(topics)
 
     return (
-        <>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9 my-10'>
+        <div className="container mx-auto px-4">
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 my-12 '>
                 {topics.map((t) => (
-                    <div key={t._id} className=" space-y-4 rounded-2xl bg-white  shadow-md dark:bg-[#18181B] border ml-12 mb-12">
+                    <div key={t._id} className="relative space-y-4 rounded-2xl bg-white  shadow-md ">
                         {/* profile image & bg  */}
+                        <div className="absolute top-5 flex items-center">
+                            <svg width={30} className="p-1 cursor-pointer fill-transparent stroke-black stroke-2 hover:fill-red-500 hover:stroke-green-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z"></path></svg>
+                        </div>
+
                         <div className="h-32 rounded-t-2xl bg-gradient-to-r from-blue-500 to-purple-500 ">
                             <div className="flex justify-center">
                                 <Image
@@ -71,20 +75,20 @@ const ContactsList = async () => {
                                 </div>
 
                                 <div className="flex items-start gap-2  text-gray-700">
-                                    <RiMapPinLine className='text-xl'/>
+                                    <RiMapPinLine className='text-xl' />
                                     <span className="text-base">{t.address}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex  justify-around gap-4 pb-4 ">
-                            <EditModal id={t._id}/>
-                            <RemoveBtn id={t._id}/>
+                            <EditModal id={t._id} />
+                            <RemoveBtn id={t._id} />
                         </div>
                     </div>
                 ))}
             </div>
-        </>
+        </div>
     );
 };
 

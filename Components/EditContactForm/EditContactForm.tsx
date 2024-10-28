@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { TbFidgetSpinner } from 'react-icons/tb';
 
 interface EditContactFormProps {
     id: string;
@@ -12,39 +13,43 @@ interface EditContactFormProps {
     profilePicture: string;
 }
 
-const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone, address, profilePicture}) => {
+const EditContactForm: React.FC<EditContactFormProps> = ({ id, name, email, phone, address, profilePicture }) => {
     const [newName, setNewName] = useState(name)
     const [newEmail, setNewEmail] = useState(email)
     const [newPhone, setNewPhone] = useState(phone);
     const [newAddress, setNewAddress] = useState(address);
     const [newProfilePicture, setNewProfilePicture] = useState(profilePicture);
-   console.log(name, email);
+    const [loading, setLoading] = useState(false);
+
     const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) =>{
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
-        try{
-            const res =await fetch(`http://localhost:3000/api/contacts/${id}`, {
+        try {
+            const res = await fetch(`http://localhost:3000/api/contacts/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-type": "application/json",
                 },
-                body:JSON.stringify({newName, newEmail,newAddress, newPhone, newProfilePicture})
+                body: JSON.stringify({ newName, newEmail, newAddress, newPhone, newProfilePicture })
             });
-            if(!res.ok) {
-                throw new Error ("Failed to update topic");
+            if (!res.ok) {
+                throw new Error("Failed to update topic");
             }
             Swal.fire({
                 icon: "success",
                 title: "Contact Data Successfully Update",
                 showConfirmButton: false,
                 timer: 1500
-              });
-              
+            });
+
             router.push('/')
-        } catch(error){
+        } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -52,14 +57,14 @@ const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone
         <div>
             <div className="max-w-lg mx-auto p-4 mt-8 mb-12 bg-white rounded-lg shadow-md">
                 <form onSubmit={handleSubmit}>
-                    
+
                     <div className="relative mx-auto w-full">
                         <input
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="text"
                             name="name"
-                              value={newName}
-                              onChange={(e) => setNewName(e.target.value)}
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
                             placeholder=""
 
                         />
@@ -74,8 +79,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="email"
                             name="email"
-                              value={newEmail}
-                              onChange={(e) => setNewEmail(e.target.value)}
+                            value={newEmail}
+                            onChange={(e) => setNewEmail(e.target.value)}
                             placeholder=""
 
                         />
@@ -91,8 +96,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone
                             type="text"
                             name="phone"
 
-                              value={newPhone}
-                              onChange={(e) =>setNewPhone(e.target.value)}
+                            value={newPhone}
+                            onChange={(e) => setNewPhone(e.target.value)}
                             placeholder=""
 
                         />
@@ -107,8 +112,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="text"
                             name="address"
-                              value={newAddress}
-                              onChange={(e) => setNewAddress(e.target.value)}
+                            value={newAddress}
+                            onChange={(e) => setNewAddress(e.target.value)}
                             placeholder=""
 
                         />
@@ -122,8 +127,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="url"
                             name="profilePicture"
-                              value={newProfilePicture}
-                              onChange={(e) => setNewProfilePicture(e.target.value)}
+                            value={newProfilePicture}
+                            onChange={(e) => setNewProfilePicture(e.target.value)}
                             placeholder=""
 
                         />
@@ -141,7 +146,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({id, name, email, phone
                             type="submit"
                             className="relative border-none bg-blue-800 text-white text-lg font-bold py-4 px-5 rounded transition-all duration-500 hover:bg-blue-700">
                             <span className="inline-block pr-2 transition-transform duration-500">
-                                Update Contacts
+                                {loading ? <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner>
+                                    : 'Update Contacts'}
                             </span>
                             <span className="absolute opacity-0 right-[-20px] transition-opacity duration-500">
                                 &#x00bb;

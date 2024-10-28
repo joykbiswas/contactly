@@ -3,8 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 import Swal from 'sweetalert2';
-
+import { TbFidgetSpinner } from 'react-icons/tb';
 import { z } from 'zod';
+
 
 interface ContactFormData {
   name: string;
@@ -33,6 +34,8 @@ const AddContacts: React.FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,6 +51,7 @@ const AddContacts: React.FC = () => {
       setErrorMessage(validationResult.error.errors[0].message);
       return;
     }
+    setLoading(true);
 
     try {
       const response = await fetch('http://localhost:3000/api/contacts', {
@@ -58,6 +62,7 @@ const AddContacts: React.FC = () => {
       if (response.ok) {
         setSuccessMessage("Contact added successfully!");
         setFormData({ name: '', email: '', phone: '', address: '', profilePicture: '' });
+        
         Swal.fire({
           position: "top-end",
           icon: "success",
@@ -65,19 +70,17 @@ const AddContacts: React.FC = () => {
           showConfirmButton: false,
           timer: 1500
         });
+        
        router.push('/');
       } else {
         setErrorMessage("Failed to add contact.");
       }
     } catch (error) {
       setErrorMessage("Error submitting the form. Please try again.");
+    }finally{
+      setLoading(false);
     }
 
-    // todo: remove after
-    // console.log("Validated Form Data:", formData);
-    // setErrorMessage("Failed to add contact.");
-    // setErrorMessage(null); // Clear any previous error
-    // setSuccessMessage("Contact added successfully!");
   };
 
   return (
@@ -134,7 +137,7 @@ const AddContacts: React.FC = () => {
               
             />
             <label className="absolute -top-2 left-2 rounded-md bg-blue-600 px-2 text-base text-sky-100 duration-300 peer-placeholder-shown:top-3 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-placeholder-shown:text-zinc-400 peer-focus:-top-2 peer-focus:bg-blue-600 peer-focus:text-sm peer-focus:text-white">
-              P Number
+              Number
             </label>
           </div>
           <br />
@@ -170,25 +173,20 @@ const AddContacts: React.FC = () => {
           </div>
           <br />
 
-
           {/* Submit Button */}
-          {/* <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-800 text-white font-bold rounded hover:bg-blue-700 focus:outline-none"
-          >
-            Add Contact
-          </button> */}
 
           <div className=' text-center'>
             <button
               type="submit"
               className="relative border-none bg-blue-800 text-white text-lg font-bold py-4 px-5 rounded transition-all duration-500 hover:bg-blue-700">
               <span className="inline-block pr-2 transition-transform duration-500">
-                Add Contacts
+              {loading ? <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner>
+               : 'Add Contacts'}
               </span>
               <span className="absolute opacity-0 right-[-20px] transition-opacity duration-500">
                 &#x00bb;
               </span>
+
             </button>
           </div>
         </form>
