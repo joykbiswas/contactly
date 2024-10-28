@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import { useRouter } from 'next/navigation';
 import { useState, FormEvent } from 'react';
+import Swal from 'sweetalert2';
+
 import { z } from 'zod';
 
 interface ContactFormData {
@@ -19,6 +23,7 @@ const contactSchema = z.object({
 });
 
 const AddContacts: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -44,27 +49,35 @@ const AddContacts: React.FC = () => {
       return;
     }
 
-    // try {
-    //   const response = await fetch('/api/contacts', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(formData),
-    //   });
-    //   if (response.ok) {
-    //     setSuccessMessage("Contact added successfully!");
-    //     setFormData({ name: '', email: '', phone: '', address: '', profilePicture: '' });
-    //   } else {
-    //     setErrorMessage("Failed to add contact.");
-    //   }
-    // } catch (error) {
-    //   setErrorMessage("Error submitting the form. Please try again.");
-    // }
+    try {
+      const response = await fetch('http://localhost:3000/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        setSuccessMessage("Contact added successfully!");
+        setFormData({ name: '', email: '', phone: '', address: '', profilePicture: '' });
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your Contact Data create",
+          showConfirmButton: false,
+          timer: 1500
+        });
+       router.push('/');
+      } else {
+        setErrorMessage("Failed to add contact.");
+      }
+    } catch (error) {
+      setErrorMessage("Error submitting the form. Please try again.");
+    }
 
     // todo: remove after
-    console.log("Validated Form Data:", formData);
-    setErrorMessage("Failed to add contact.");
-    setErrorMessage(null); // Clear any previous error
-    setSuccessMessage("Contact added successfully!");
+    // console.log("Validated Form Data:", formData);
+    // setErrorMessage("Failed to add contact.");
+    // setErrorMessage(null); // Clear any previous error
+    // setSuccessMessage("Contact added successfully!");
   };
 
   return (

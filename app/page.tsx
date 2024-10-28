@@ -5,9 +5,11 @@ import ContactsList from "@/Components/ContactsList/ContactsList";
 export default function Home() {
   return (
     <>
-    <Banner />
-    <h1>Hello</h1>
-    <ContactsList />
+      <Banner />
+      <div className="max-w-7xl mx-auto ">
+        <ContactsList />
+      </div>
+
     </>
   );
 }

@@ -1,22 +1,50 @@
-import React from 'react';
+"use client"
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
-const EditContactForm = () => {
+interface EditContactForm {
+    id: string; 
+}
+
+const EditContactForm = ({id, name, email, phone, address, profilePicture}) => {
+    const [newName, setNewName] = useState(name)
+    const [newEmail, setNewEmail] = useState(email)
+    const [newPhone, setNewPhone] = useState(phone);
+    const [newAddress, setNewAddress] = useState(address);
+    const [newProfilePicture, setNewProfilePicture] = useState(profilePicture);
+   console.log(name, email);
+    const router = useRouter();
+
+    const handleSubmit = async (e) =>{
+        e.preventDefault();
+
+        try{
+            const res =await fetch(`http://localhost:3000/api/contacts/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body:JSON.stringify({newName, newEmail,newAddress, newPhone, newProfilePicture})
+            });
+            if(!res.ok) {
+                throw new Error ("Failed to update topic");
+            }
+            router.push('/')
+        } catch(error){}
+    }
+
     return (
         <div>
             <div className="max-w-lg mx-auto p-4 bg-white rounded-lg shadow-md">
-                <form >
-                    {/* {errorMessage && <p className="text-red-500">{errorMessage}</p>} */}
-                    {/* {successMessage && <p className="text-green-500">{successMessage}</p>} */}
-
-                    {/* Name Input */}
-                    {/* name input field */}
+                <form onSubmit={handleSubmit}>
+                    
                     <div className="relative mx-auto w-full">
                         <input
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="text"
                             name="name"
-                            //   value={formData.name}
-                            //   onChange={handleChange}
+                              value={newName}
+                              onChange={(e) => setNewName(e.target.value)}
                             placeholder=""
 
                         />
@@ -31,8 +59,8 @@ const EditContactForm = () => {
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="email"
                             name="email"
-                            //   value={formData.email}
-                            //   onChange={handleChange}
+                              value={newEmail}
+                              onChange={(e) => setNewEmail(e.target.value)}
                             placeholder=""
 
                         />
@@ -48,8 +76,8 @@ const EditContactForm = () => {
                             type="text"
                             name="phone"
 
-                            //   value={formData.phone}
-                            //   onChange={handleChange}
+                              value={newPhone}
+                              onChange={(e) =>setNewPhone(e.target.value)}
                             placeholder=""
 
                         />
@@ -64,8 +92,8 @@ const EditContactForm = () => {
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="text"
                             name="address"
-                            //   value={formData.address}
-                            //   onChange={handleChange}
+                              value={newAddress}
+                              onChange={(e) => setNewAddress(e.target.value)}
                             placeholder=""
 
                         />
@@ -79,8 +107,8 @@ const EditContactForm = () => {
                             className="peer w-full border border-blue-500 rounded-md  bg-transparent px-4 py-3  focus:outline-none"
                             type="url"
                             name="profilePicture"
-                            //   value={formData.profilePicture}
-                            //   onChange={handleChange}
+                              value={newProfilePicture}
+                              onChange={(e) => setNewProfilePicture(e.target.value)}
                             placeholder=""
 
                         />
@@ -92,12 +120,6 @@ const EditContactForm = () => {
 
 
                     {/* Submit Button */}
-                    {/* <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-800 text-white font-bold rounded hover:bg-blue-700 focus:outline-none"
-          >
-            Add Contact
-          </button> */}
 
                     <div className=' text-center'>
                         <button
